@@ -3,6 +3,7 @@ from dash import dash_table
 from dash import dcc # dash core components
 from dash import html
 from dash.dependencies import Input, Output, State
+import dash_pivottable
 import pandas as pd
 
 df = pd.read_csv('https://bit.ly/elements-periodic-table')
@@ -122,9 +123,17 @@ app.layout = html.Div([
     Input('values', 'value')
 )
 def update_output(index, columns, values):
-    return dash_table.DataTable(
-        columns=[{"name": i, "id": i} for i in df.columns],
+    return dash_pivottable.PivotTable(
         data=df.to_dict('records'),
+        cols=["{}".format(columns)],
+        rows=["{}".format(index)],
+        vals=["{}".format(values)]
     )
+    
+    
+    # dash_table.DataTable(
+    #     columns=[{"name": i, "id": i} for i in df.columns],
+    #     data=df.to_dict('records'),
+    # )
 
 app.run_server(debug=True, host="0.0.0.0")
